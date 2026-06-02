@@ -123,6 +123,21 @@
         </div>
       </section>
 
+      {% if manifest.artifacts.molecule_grid %}
+      <section>
+        <h2>Molecule Grid</h2>
+        <p>
+          This grid shows the first valid molecules parsed in the run. It is a
+          visual check, not a scientific conclusion.
+        </p>
+        <img
+          src="{{ manifest.artifacts.molecule_grid }}"
+          alt="Grid of valid molecule structures"
+          style="max-width: 100%; border: 1px solid var(--line); border-radius: 8px;"
+        >
+      </section>
+      {% endif %}
+
       <section>
         <h2>Descriptor Summary</h2>
         <p>

@@ -21,6 +21,7 @@ from .models import (
     WorkflowConfig,
 )
 from .report import render_report
+from .visualization import write_molecule_grid
 
 
 class WorkflowError(RuntimeError):
@@ -61,6 +62,7 @@ def run_molecule_screen(
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     descriptors, flags, invalid = screen_molecules(records)
+    grid_written = write_molecule_grid(run_dir / "molecule_grid.svg", descriptors)
     write_csv(run_dir / "descriptors.csv", descriptors)
     write_csv(run_dir / "flags.csv", flags)
     write_csv(run_dir / "invalid_molecules.csv", invalid)
@@ -73,6 +75,7 @@ def run_molecule_screen(
         descriptors=descriptors,
         flags=flags,
         invalid=invalid,
+        grid_written=grid_written,
     )
     write_yaml(run_dir / "manifest.yaml", manifest)
     write_json(run_dir / "manifest.json", manifest)
@@ -262,6 +265,7 @@ def build_manifest(
     descriptors: list[DescriptorRecord],
     flags: list[FlagRecord],
     invalid: list[InvalidMoleculeRecord],
+    grid_written: bool,
 ) -> dict[str, Any]:
     return {
         "run_id": run_id,
@@ -278,6 +282,9 @@ def build_manifest(
             "valid_molecules": len(descriptors),
             "invalid_molecules": len(invalid),
             "flags": len(flags),
+        },
+        "artifacts": {
+            "molecule_grid": "molecule_grid.svg" if grid_written else None,
         },
         "environment": {
             "python": sys.version.split()[0],
