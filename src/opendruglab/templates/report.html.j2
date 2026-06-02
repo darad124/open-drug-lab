@@ -163,6 +163,28 @@
       </section>
 
       <section>
+        <h2>Descriptor Guide</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Descriptor</th>
+              <th>Report label</th>
+              <th>Plain-language meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in descriptor_explanations %}
+            <tr>
+              <td>{{ item.name }}</td>
+              <td><code>{{ item.key }}</code></td>
+              <td>{{ item.description }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
         <h2>Flags</h2>
         <table>
           <thead>
