@@ -8,6 +8,17 @@ def test_cli_help_builds_command_tree() -> None:
 
     assert result.exit_code == 0
     assert "validate" in result.output
+    assert "review" in result.output
+
+
+def test_review_command_explains_missing_rdkit(tmp_path) -> None:
+    molecules = tmp_path / "molecules.csv"
+    molecules.write_text("id,smiles\nethanol,CCO\n", encoding="utf-8")
+
+    result = CliRunner().invoke(app, ["review", str(molecules)])
+
+    assert result.exit_code == 1
+    assert "requires RDKit" in result.output
 
 
 def test_write_demo_file_preserves_existing_without_force(tmp_path) -> None:

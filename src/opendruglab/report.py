@@ -7,7 +7,14 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 from .citations import CITATIONS
 from .descriptors import DESCRIPTOR_EXPLANATIONS
-from .models import DescriptorRecord, FlagRecord, InvalidMoleculeRecord
+from .models import (
+    DescriptorRecord,
+    FlagRecord,
+    InvalidMoleculeRecord,
+    ReviewedMoleculeRecord,
+    ReviewFlagRecord,
+    ReviewSummary,
+)
 
 
 def render_report(
@@ -31,6 +38,33 @@ def render_report(
         invalid=invalid,
         manifest=manifest,
         descriptor_explanations=DESCRIPTOR_EXPLANATIONS,
+        citations=CITATIONS,
+    )
+    output_path.write_text(html, encoding="utf-8")
+
+
+def render_review_report(
+    output_path: Path,
+    *,
+    title: str,
+    summary: ReviewSummary,
+    flags: list[ReviewFlagRecord],
+    invalid: list[InvalidMoleculeRecord],
+    reviewed: list[ReviewedMoleculeRecord],
+    manifest: dict[str, Any],
+) -> None:
+    env = Environment(
+        loader=PackageLoader("opendruglab", "templates"),
+        autoescape=select_autoescape(["html"]),
+    )
+    template = env.get_template("review.html.j2")
+    html = template.render(
+        title=title,
+        summary=summary,
+        flags=flags,
+        invalid=invalid,
+        reviewed=reviewed,
+        manifest=manifest,
         citations=CITATIONS,
     )
     output_path.write_text(html, encoding="utf-8")

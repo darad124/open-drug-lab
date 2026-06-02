@@ -7,13 +7,16 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .review import review_molecule_csv
 from .workflow import WorkflowError, load_workflow, read_molecules, run_molecule_screen
 
 app = typer.Typer(help="Open Drug Lab command line interface.")
 console = Console()
 CONFIG_ARG = typer.Argument(help="Path to a workflow YAML file.")
+MOLECULE_CSV_ARG = typer.Argument(help="Path to a molecule CSV file.")
 TARGET_ARG = typer.Argument(help="Directory to initialize.")
 RUNS_DIR_OPT = typer.Option(help="Override the workflow output runs directory.")
+OUTPUT_DIR_OPT = typer.Option(help="Directory for review artifacts.")
 FORCE_OPT = typer.Option(help="Overwrite existing demo files.")
 DEMO_MOLECULES = """id,smiles
 caffeine,Cn1cnc2n(C)c(=O)n(C)c(=O)c12
@@ -106,6 +109,30 @@ def validate(config: Annotated[Path, CONFIG_ARG]) -> None:
     console.print(f"Workflow: {workflow.workflow}")
     console.print(f"Molecule input: {molecule_path}")
     console.print(f"Rows: {len(records)}")
+
+
+@app.command()
+def review(
+    molecules: Annotated[Path, MOLECULE_CSV_ARG],
+    output_dir: Annotated[Path | None, OUTPUT_DIR_OPT] = None,
+) -> None:
+    """Review a molecule CSV before downstream screening."""
+    try:
+        result = review_molecule_csv(molecules, output_dir=output_dir)
+    except WorkflowError as exc:
+        console.print("[bold red]Review failed:[/bold red]")
+        console.print(str(exc), markup=False)
+        raise typer.Exit(code=1) from exc
+
+    table = Table(title="Open Drug Lab dataset review complete")
+    table.add_column("Field")
+    table.add_column("Value")
+    table.add_row("Output directory", str(result.output_dir))
+    table.add_row("Reviewed molecules", str(result.summary.reviewed_molecules))
+    table.add_row("Invalid molecules", str(result.summary.invalid_molecules))
+    table.add_row("Warnings", str(result.summary.warning_flags))
+    table.add_row("Report", str(result.output_dir / "review.html"))
+    console.print(table)
 
 
 def _write_demo_file(path: Path, content: str, *, force: bool) -> None:

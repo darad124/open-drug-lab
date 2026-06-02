@@ -58,3 +58,35 @@ class InvalidMoleculeRecord(BaseModel):
     molecule_id: str
     smiles: str
     reason: str
+
+
+class ReviewFlagRecord(BaseModel):
+    molecule_id: str
+    smiles: str
+    canonical_smiles: str | None = None
+    category: str
+    severity: Literal["info", "warning", "error"]
+    message: str
+    explanation: str
+
+
+class ReviewedMoleculeRecord(BaseModel):
+    molecule_id: str
+    input_smiles: str
+    canonical_smiles: str
+    status: Literal["reviewed"]
+    warning_count: int
+    info_count: int
+
+
+class ReviewSummary(BaseModel):
+    input_file: str
+    output_dir: str
+    total_rows: int
+    reviewed_molecules: int
+    invalid_molecules: int
+    duplicate_molecules: int
+    salt_or_mixture_molecules: int
+    warning_flags: int
+    info_flags: int
+    error_flags: int

@@ -7,6 +7,7 @@ Open Drug Lab is in early alpha.
 | Area | Status |
 | --- | --- |
 | Molecule CSV validation | Available |
+| Molecule dataset review | Available with RDKit environment |
 | RDKit descriptors | Available with RDKit environment |
 | Rule flags | Available |
 | HTML reports | Available |

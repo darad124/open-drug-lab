@@ -47,6 +47,12 @@ Run the demo workflow:
 odl run workflows/molecule_screen.yaml
 ```
 
+Review a molecule CSV before screening:
+
+```bash
+odl review examples/molecules/demo_molecules.csv
+```
+
 Outputs are written to `runs/<run_id>/`:
 
 ```text
@@ -61,6 +67,7 @@ logs/run.log
 
 See [Demo Report](docs/demo-report.md) for the full artifact list and expected
 workflow behavior.
+See [Dataset Review](docs/dataset-review.md) for the molecule CSV audit workflow.
 
 ## Example Workflow
 

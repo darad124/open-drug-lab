@@ -34,6 +34,10 @@ jobs:
         shell: bash -el {0}
         run: |
           odl validate workflows/molecule_screen.yaml
+          odl review examples/molecules/demo_molecules.csv --output-dir ci-review
+          test -f ci-review/review.html
+          test -f ci-review/review_summary.json
+          test -f ci-review/review_flags.csv
           odl run workflows/molecule_screen.yaml --runs-dir ci-runs
           test -f ci-runs/*/report.html
           test -f ci-runs/*/molecule_grid.svg

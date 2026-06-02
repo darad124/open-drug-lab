@@ -6,6 +6,10 @@ All notable changes to Open Drug Lab will be documented here.
 
 ### Added
 
+- `odl review` command for molecule CSV dataset audits.
+- Review artifacts: HTML report, summary JSON, manifest JSON, flags CSV,
+  reviewed molecule CSV, and invalid molecule CSV.
+- Dataset review documentation with quality-control scope and safety boundaries.
 - Molecule grid SVG generation for chemistry runs.
 - Report embedding for generated molecule grids.
 - Conda/RDKit CI workflow that runs the demo molecule screen.
