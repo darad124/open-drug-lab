@@ -11,10 +11,10 @@ from .workflow import WorkflowError, load_workflow, read_molecules, run_molecule
 
 app = typer.Typer(help="Open Drug Lab command line interface.")
 console = Console()
-CONFIG_ARG = typer.Argument(..., help="Path to a workflow YAML file.")
+CONFIG_ARG = typer.Argument(help="Path to a workflow YAML file.")
 TARGET_ARG = typer.Argument(help="Directory to initialize.")
-RUNS_DIR_OPT = typer.Option(None, help="Override the workflow output runs directory.")
-FORCE_OPT = typer.Option(False, help="Overwrite existing demo files.")
+RUNS_DIR_OPT = typer.Option(help="Override the workflow output runs directory.")
+FORCE_OPT = typer.Option(help="Overwrite existing demo files.")
 DEMO_MOLECULES = """id,smiles
 caffeine,Cn1cnc2n(C)c(=O)n(C)c(=O)c12
 aspirin,CC(=O)Oc1ccccc1C(=O)O

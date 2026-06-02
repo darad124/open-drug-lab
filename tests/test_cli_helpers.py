@@ -1,4 +1,13 @@
-from opendruglab.cli import _write_demo_file
+from typer.testing import CliRunner
+
+from opendruglab.cli import _write_demo_file, app
+
+
+def test_cli_help_builds_command_tree() -> None:
+    result = CliRunner().invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+    assert "validate" in result.output
 
 
 def test_write_demo_file_preserves_existing_without_force(tmp_path) -> None:
