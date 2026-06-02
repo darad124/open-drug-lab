@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import json
 import platform
 import sys
 from dataclasses import dataclass
@@ -74,6 +75,7 @@ def run_molecule_screen(
         invalid=invalid,
     )
     write_yaml(run_dir / "manifest.yaml", manifest)
+    write_json(run_dir / "manifest.json", manifest)
     (logs_dir / "run.log").write_text(
         f"Open Drug Lab run {run_id}\n"
         f"Valid molecules: {len(descriptors)}\n"
@@ -317,6 +319,13 @@ def write_yaml(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
         yaml.safe_dump(data, handle, sort_keys=False)
+
+
+def write_json(path: Path, data: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(data, handle, indent=2)
+        handle.write("\n")
 
 
 def package_versions(names: list[str]) -> dict[str, str]:
