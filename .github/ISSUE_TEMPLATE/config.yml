@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Scientific safety guidance
+    url: https://github.com/darad124/open-drug-lab/blob/main/docs/scientific-safety.md
+    about: Read this before proposing workflows that may be overinterpreted.
