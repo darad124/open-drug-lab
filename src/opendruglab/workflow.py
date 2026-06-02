@@ -40,7 +40,10 @@ def load_workflow(path: Path) -> WorkflowConfig:
     return WorkflowConfig.model_validate(data)
 
 
-def run_molecule_screen(config_path: Path) -> WorkflowResult:
+def run_molecule_screen(
+    config_path: Path,
+    runs_dir_override: Path | None = None,
+) -> WorkflowResult:
     config = load_workflow(config_path)
     root = (
         config_path.parent.parent
@@ -48,7 +51,7 @@ def run_molecule_screen(config_path: Path) -> WorkflowResult:
         else Path.cwd()
     )
     molecules_path = _resolve_path(root, config.inputs.molecules)
-    runs_dir = _resolve_path(root, config.outputs.runs_dir)
+    runs_dir = _resolve_path(root, runs_dir_override or config.outputs.runs_dir)
 
     records = read_molecules(molecules_path)
     run_id = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")

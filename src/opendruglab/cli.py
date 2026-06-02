@@ -13,6 +13,7 @@ app = typer.Typer(help="Open Drug Lab command line interface.")
 console = Console()
 CONFIG_ARG = typer.Argument(..., help="Path to a workflow YAML file.")
 TARGET_ARG = typer.Argument(help="Directory to initialize.")
+RUNS_DIR_OPT = typer.Option(None, help="Override the workflow output runs directory.")
 DEMO_MOLECULES = """id,smiles
 caffeine,Cn1cnc2n(C)c(=O)n(C)c(=O)c12
 aspirin,CC(=O)Oc1ccccc1C(=O)O
@@ -35,10 +36,13 @@ settings:
 
 
 @app.command()
-def run(config: Annotated[Path, CONFIG_ARG]) -> None:
+def run(
+    config: Annotated[Path, CONFIG_ARG],
+    runs_dir: Annotated[Path | None, RUNS_DIR_OPT] = None,
+) -> None:
     """Run a workflow and write artifacts to a run directory."""
     try:
-        result = run_molecule_screen(config)
+        result = run_molecule_screen(config, runs_dir_override=runs_dir)
     except WorkflowError as exc:
         console.print("[bold red]Workflow failed:[/bold red]")
         console.print(str(exc), markup=False)
