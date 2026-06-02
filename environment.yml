@@ -1,0 +1,9 @@
+name: open-drug-lab
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - rdkit
+  - pip
+  - pip:
+      - -e ".[dev]"

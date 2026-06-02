@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #172033;
+        --muted: #5d677c;
+        --line: #d8deea;
+        --soft: #f4f7fb;
+        --accent: #2266cc;
+        --warn: #b54708;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: white;
+      }
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 40px 24px 64px;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+      }
+      h2 {
+        margin-top: 32px;
+        font-size: 20px;
+      }
+      p {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .disclaimer {
+        border: 1px solid #f7c98b;
+        background: #fff7ed;
+        color: #7c2d12;
+        padding: 14px 16px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .card {
+        background: var(--soft);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+      }
+      .metric {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .value {
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 4px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13px;
+        margin-top: 12px;
+      }
+      th, td {
+        border: 1px solid var(--line);
+        padding: 8px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--soft);
+      }
+      code {
+        background: var(--soft);
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+      .warning {
+        color: var(--warn);
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>{{ title }}</h1>
+        <p>Run ID: <code>{{ manifest.run_id }}</code></p>
+      </header>
+
+      <div class="disclaimer">
+        <strong>Educational use only.</strong>
+        {{ manifest.disclaimer }}
+      </div>
+
+      <section class="cards">
+        <div class="card">
+          <div class="metric">Valid molecules</div>
+          <div class="value">{{ manifest.counts.valid_molecules }}</div>
+        </div>
+        <div class="card">
+          <div class="metric">Invalid molecules</div>
+          <div class="value">{{ manifest.counts.invalid_molecules }}</div>
+        </div>
+        <div class="card">
+          <div class="metric">Flags</div>
+          <div class="value">{{ manifest.counts.flags }}</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Descriptor Summary</h2>
+        <p>
+          These descriptors are simple screening signals. They are not evidence
+          that a molecule is safe, effective, synthesizable, or suitable for any
+          clinical or operational use.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Canonical SMILES</th>
+              <th>MW</th>
+              <th>cLogP</th>
+              <th>TPSA</th>
+              <th>HBD</th>
+              <th>HBA</th>
+              <th>RotB</th>
+              <th>QED</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in descriptors %}
+            <tr>
+              <td>{{ row.molecule_id }}</td>
+              <td><code>{{ row.canonical_smiles }}</code></td>
+              <td>{{ row.molecular_weight }}</td>
+              <td>{{ row.clogp }}</td>
+              <td>{{ row.tpsa }}</td>
+              <td>{{ row.hbd }}</td>
+              <td>{{ row.hba }}</td>
+              <td>{{ row.rotatable_bonds }}</td>
+              <td>{{ row.qed }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Flags</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Severity</th>
+              <th>Flag</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for flag in flags %}
+            <tr>
+              <td>{{ flag.molecule_id }}</td>
+              <td class="{{ 'warning' if flag.severity == 'warning' else '' }}">{{ flag.severity }}</td>
+              <td>{{ flag.flag }}</td>
+              <td>{{ flag.message }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Invalid Molecules</h2>
+        {% if invalid %}
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>SMILES</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in invalid %}
+            <tr>
+              <td>{{ row.molecule_id }}</td>
+              <td><code>{{ row.smiles }}</code></td>
+              <td>{{ row.reason }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No invalid molecules were reported.</p>
+        {% endif %}
+      </section>
+
+      <section>
+        <h2>Provenance</h2>
+        <table>
+          <tbody>
+            <tr>
+              <th>Created at</th>
+              <td>{{ manifest.created_at }}</td>
+            </tr>
+            <tr>
+              <th>Input file</th>
+              <td><code>{{ manifest.input.molecules }}</code></td>
+            </tr>
+            <tr>
+              <th>Input SHA-256</th>
+              <td><code>{{ manifest.input.sha256 }}</code></td>
+            </tr>
+            <tr>
+              <th>Python</th>
+              <td>{{ manifest.environment.python }}</td>
+            </tr>
+            <tr>
+              <th>Platform</th>
+              <td>{{ manifest.environment.platform }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+</html>

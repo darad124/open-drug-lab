@@ -1,0 +1,9 @@
+name: demo molecule screen
+workflow: molecule_screen
+inputs:
+  molecules: examples/molecules/demo_molecules.csv
+outputs:
+  runs_dir: runs
+settings:
+  standardize: conservative
+  report_title: Demo Molecule Screen

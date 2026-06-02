@@ -1,0 +1,45 @@
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Annotated
+
+import typer
+from rich.console import Console
+from rich.table import Table
+
+from .workflow import WorkflowError, run_molecule_screen
+
+app = typer.Typer(help="Open Drug Lab command line interface.")
+console = Console()
+CONFIG_ARG = typer.Argument(..., help="Path to a workflow YAML file.")
+TARGET_ARG = typer.Argument(help="Directory to initialize.")
+
+
+@app.command()
+def run(config: Annotated[Path, CONFIG_ARG]) -> None:
+    """Run a workflow and write artifacts to a run directory."""
+    try:
+        result = run_molecule_screen(config)
+    except WorkflowError as exc:
+        console.print("[bold red]Workflow failed:[/bold red]")
+        console.print(str(exc), markup=False)
+        raise typer.Exit(code=1) from exc
+
+    table = Table(title="Open Drug Lab run complete")
+    table.add_column("Field")
+    table.add_column("Value")
+    table.add_row("Run ID", result.run_id)
+    table.add_row("Run directory", str(result.run_dir))
+    table.add_row("Valid molecules", str(result.valid_count))
+    table.add_row("Invalid molecules", str(result.invalid_count))
+    table.add_row("Report", str(result.run_dir / "report.html"))
+    console.print(table)
+
+
+@app.command()
+def init(target: Annotated[Path, TARGET_ARG] = Path(".")) -> None:
+    """Create a minimal demo workspace."""
+    target.mkdir(parents=True, exist_ok=True)
+    (target / "examples" / "molecules").mkdir(parents=True, exist_ok=True)
+    (target / "workflows").mkdir(parents=True, exist_ok=True)
+    console.print(f"Initialized Open Drug Lab workspace at {target.resolve()}")
