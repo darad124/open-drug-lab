@@ -7,7 +7,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from .workflow import WorkflowError, run_molecule_screen
+from .workflow import WorkflowError, load_workflow, read_molecules, run_molecule_screen
 
 app = typer.Typer(help="Open Drug Lab command line interface.")
 console = Console()
@@ -73,3 +73,26 @@ def init(target: Annotated[Path, TARGET_ARG] = Path(".")) -> None:
     )
     console.print(f"Initialized Open Drug Lab workspace at {target.resolve()}")
     console.print("Run: odl run workflows/molecule_screen.yaml")
+
+
+@app.command()
+def validate(config: Annotated[Path, CONFIG_ARG]) -> None:
+    """Validate workflow configuration and input CSV shape."""
+    try:
+        workflow = load_workflow(config)
+        root = config.parent.parent if config.parent.name == "workflows" else Path.cwd()
+        molecule_path = (
+            workflow.inputs.molecules
+            if workflow.inputs.molecules.is_absolute()
+            else (root / workflow.inputs.molecules).resolve()
+        )
+        records = read_molecules(molecule_path)
+    except WorkflowError as exc:
+        console.print("[bold red]Validation failed:[/bold red]")
+        console.print(str(exc), markup=False)
+        raise typer.Exit(code=1) from exc
+
+    console.print("[bold green]Workflow config is valid.[/bold green]")
+    console.print(f"Workflow: {workflow.workflow}")
+    console.print(f"Molecule input: {molecule_path}")
+    console.print(f"Rows: {len(records)}")
