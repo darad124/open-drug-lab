@@ -59,6 +59,9 @@ cleaned_molecules.csv
 logs/run.log
 ```
 
+See [Demo Report](docs/demo-report.md) for the full artifact list and expected
+workflow behavior.
+
 ## Example Workflow
 
 ```yaml
