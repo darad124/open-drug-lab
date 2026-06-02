@@ -7,6 +7,8 @@ It does **not** discover drugs, make medical claims, or replace expert
 scientific judgment. It wraps trusted chemistry tooling into small workflows that
 save provenance, explain assumptions, and generate beginner-readable reports.
 
+Project maturity is tracked in [Project Status](docs/project-status.md).
+
 ## Why This Exists
 
 Great tools already exist: RDKit, OpenMM, DeepChem, Datamol, OpenFE, Meeko, and
