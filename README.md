@@ -105,6 +105,9 @@ ruff check .
 
 See [Release Process](docs/release-process.md) for maintainer release steps.
 
+The GitHub Actions workflow includes a lightweight Python test job and a
+conda/RDKit chemistry-demo job that runs the full molecule-screen workflow.
+
 ## Current MVP Boundary
 
 v0.1 intentionally starts with molecule cleanup, descriptors, simple educational

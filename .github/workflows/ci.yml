@@ -20,3 +20,21 @@ jobs:
         run: ruff check .
       - name: Test
         run: pytest
+
+  chemistry-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: open-drug-lab
+          environment-file: environment.yml
+          auto-activate-base: false
+      - name: Run demo workflow
+        shell: bash -el {0}
+        run: |
+          odl validate workflows/molecule_screen.yaml
+          odl run workflows/molecule_screen.yaml --runs-dir ci-runs
+          test -f ci-runs/*/report.html
+          test -f ci-runs/*/molecule_grid.svg
+          test -f ci-runs/*/manifest.json
