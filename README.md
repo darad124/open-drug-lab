@@ -71,6 +71,9 @@ settings:
   report_title: Demo Molecule Screen
 ```
 
+See [Input Formats](docs/input-formats.md) for the expected molecule CSV shape
+and common validation failures.
+
 ## Scientific Scope
 
 Open Drug Lab outputs are educational screening artifacts. Descriptor flags such
