@@ -261,6 +261,26 @@
           </tbody>
         </table>
       </section>
+
+      <section>
+        <h2>Sources and Tooling</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Why it appears here</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for citation in citations %}
+            <tr>
+              <td><a href="{{ citation.url }}">{{ citation.name }}</a></td>
+              <td>{{ citation.note }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
     </main>
   </body>
 </html>

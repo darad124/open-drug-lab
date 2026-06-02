@@ -5,6 +5,7 @@ from typing import Any
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
+from .citations import CITATIONS
 from .descriptors import DESCRIPTOR_EXPLANATIONS
 from .models import DescriptorRecord, FlagRecord, InvalidMoleculeRecord
 
@@ -30,5 +31,6 @@ def render_report(
         invalid=invalid,
         manifest=manifest,
         descriptor_explanations=DESCRIPTOR_EXPLANATIONS,
+        citations=CITATIONS,
     )
     output_path.write_text(html, encoding="utf-8")
