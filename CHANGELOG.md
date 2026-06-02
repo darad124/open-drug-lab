@@ -2,7 +2,17 @@
 
 All notable changes to Open Drug Lab will be documented here.
 
-## 0.1.0 - Unreleased
+## 0.2.0 - Unreleased
+
+### Added
+
+- Molecule grid SVG generation for chemistry runs.
+- Report embedding for generated molecule grids.
+- Conda/RDKit CI workflow that runs the demo molecule screen.
+- Demo report documentation with expected artifacts.
+- Safer `odl init` behavior that preserves files unless `--force` is used.
+
+## 0.1.0 - 2026-06-02
 
 ### Added
 

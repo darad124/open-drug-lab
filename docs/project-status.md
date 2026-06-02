@@ -10,6 +10,7 @@ Open Drug Lab is in early alpha.
 | RDKit descriptors | Available with RDKit environment |
 | Rule flags | Available |
 | HTML reports | Available |
+| Molecule grid artifact | Available with RDKit environment |
 | Run manifests | Available |
 | ADMET model predictions | Not implemented |
 | Docking | Not implemented |
